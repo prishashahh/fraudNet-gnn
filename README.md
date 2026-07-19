@@ -62,7 +62,8 @@ FraudNet-GNN builds a multi-layered feature set for each transaction graph:
 
 ## 📈 Project Architecture
 
-![Model Workflow](images/model_workflow.png)
+<img width="560" height="847" alt="image" src="https://github.com/user-attachments/assets/39e98ff4-8acb-44db-b02a-1dfaf409c5d1" />
+
 
 The pipeline combines three complementary detection strategies rather than relying on a single model:
 
@@ -75,7 +76,8 @@ The pipeline combines three complementary detection strategies rather than relyi
 
 ## 📊 Results
 
-![Results](images/results.png)
+<img width="1000" height="480" alt="WhatsApp Image 2026-07-19 at 3 11 14 PM" src="https://github.com/user-attachments/assets/2e2feb53-98f5-4cb5-a0d5-c5a3cb2fde91" />
+
 
 Final results after 5 training epochs. Model checkpoint saved to `model.pth` after training.
 
