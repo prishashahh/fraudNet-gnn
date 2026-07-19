@@ -1,6 +1,6 @@
 # 🕸️ FraudNet-GNN – Graph-Based Fraud Detection System
 
-FraudNet-GNN is a fraud detection system that models financial transactions as a graph and uses Graph Neural Networks combined with classical graph heuristics and unsupervised anomaly detection to flag suspicious activity. Instead of treating each transaction in isolation, it looks at the relationships between accounts, devices, and transfers to surface fraud patterns that are only visible at the network level — such as money laundering rings, fan-in/fan-out schemes, and shared-device fraud clusters.
+FraudNet-GNN is a fraud detection system that models financial transactions as a graph and uses Graph Neural Networks combined with classical graph heuristics and unsupervised anomaly detection to flag suspicious activity. Instead of treating each transaction in isolation, it looks at the relationships between accounts, devices, and transfers to surface fraud patterns that are only visible at the network level such as money laundering rings, fan-in/fan-out schemes, and shared-device fraud clusters.
 
 ---
 
@@ -30,9 +30,9 @@ FraudNet-GNN is a fraud detection system that models financial transactions as a
 
 | Component                  | Technology |
 |----------------------------|-----------|
-| Core Language               | Python |
+| Core Language               | Python & C++|
 | Performance-Critical Modules | C++ |
-| Graph Learning               | Graph Neural Networks (GraphSAGE, GCN) |
+| Graph Learning               | Dynamic Graph Neural Networks (TGN - Temporal Graph Neural Network) |
 | Anomaly Detection            | Isolation Forest, Local Outlier Factor (LOF) |
 | Graph Analysis               | Cycle / dense subgraph / fan-in-fan-out heuristics |
 
@@ -40,7 +40,7 @@ FraudNet-GNN is a fraud detection system that models financial transactions as a
 
 ## 📊 Data
 
-- **Training:** Synthetic transaction graph data, generated to simulate realistic fraud and non-fraud behavior patterns
+- **Training:** Synthetic dynamic transaction graph data, generated to simulate realistic fraud and non-fraud behavior patterns
 - **Testing / Benchmarking:** Public Kaggle fraud datasets, including the **Elliptic Bitcoin Dataset**, used to validate detection performance on real-world-style transaction graphs
 
 ---
@@ -49,7 +49,7 @@ FraudNet-GNN is a fraud detection system that models financial transactions as a
 
 FraudNet-GNN builds a multi-layered feature set for each transaction graph:
 
-- **Node Features** — attributes describing individual accounts/entities
+- **Node Features** — attributes describing individual accounts
 - **Graph-Based Features** — structural signals derived from the surrounding graph topology (e.g. centrality, connectivity patterns)
 - **Dynamic Features** — behavior that evolves over time for a given node
 - **Edge Features** — including:
@@ -67,9 +67,9 @@ FraudNet-GNN builds a multi-layered feature set for each transaction graph:
 
 The pipeline combines three complementary detection strategies rather than relying on a single model:
 
-1. **Graph Construction** — raw transaction data is converted into a graph structure (nodes = accounts/entities, edges = transactions)
+1. **Graph Construction** — raw transaction data is converted into a graph structure (nodes = accounts, edges = transactions)
 2. **Heuristic Screening** — graph-theoretic checks (cycles, fan-in/fan-out, bursts, dense subgraphs, shared devices) flag structurally suspicious patterns
-3. **GNN Classification** — a GraphSAGE/GCN model learns from node, edge, and neighborhood context to classify fraud vs. legitimate activity
+3. **GNN Classification** — a dynamic TGN model learns in Real-time from node, edge, and neighborhood context to classify fraud vs. legitimate activity
 4. **Anomaly Detection Layer** — Isolation Forest and LOF catch outliers that don't match known fraud signatures, adding coverage for novel fraud types
 
 ---
