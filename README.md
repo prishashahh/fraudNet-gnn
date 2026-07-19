@@ -1,45 +1,89 @@
-Our project focuses on detecting fraudulent behavior in financial transaction networks by modeling the system as a dynamic graph, where nodes represent accounts and edges represent transactions enriched with multiple features such as amount, timestamp, device ID, and location. On top of this graph, we compute several structural and statistical graph features including degree, average neighbor degree, clustering coefficient, and PageRank to capture node importance and local connectivity patterns. We further incorporate advanced graph algorithms such as cycle detection for identifying fraud rings, fan-in and fan-out analysis for spotting suspicious flow patterns, burst detection for temporal anomalies, dense subgraph detection (via clustering coefficient) for coordinated fraud groups, and device-sharing analysis to uncover linked malicious accounts. These handcrafted heuristics are combined into a risk scoring mechanism that provides interpretable signals for each node. To enhance detection capability, we then feed these node and edge features into a Graph Neural Network (GNN), specifically an edge-aware model such as GraphSAGE or GCN, which learns latent representations of nodes by aggregating neighborhood information. Alongside this, we apply unsupervised anomaly detection techniques like Isolation Forest and Local Outlier Factor (LOF) on the learned embeddings to identify previously unseen fraud patterns. Here are the node and edge features taken into account:
+# 🕸️ FraudNet-GNN – Graph-Based Fraud Detection System
 
--> Basic Node Features :
-    - In-degree
-    - Out-Degree
-    - Total transaction amount
-    - Latest transaction timestamp
+FraudNet-GNN is a fraud detection system that models financial transactions as a graph and uses Graph Neural Networks combined with classical graph heuristics and unsupervised anomaly detection to flag suspicious activity. Instead of treating each transaction in isolation, it looks at the relationships between accounts, devices, and transfers to surface fraud patterns that are only visible at the network level — such as money laundering rings, fan-in/fan-out schemes, and shared-device fraud clusters.
 
--> Graph-based features
-   - PageRank
-   - Clustering Coefficient
-   - Average neighbor degree
+---
 
-->Dynamic features
-   - Transaction frequency
-   - Burst activity flag
-   - Geo anomaly flag
-   - shared device count
+## 📌 Table of Contents
 
--> Edge Features
+- [✨ Key Features](#-key-features)
+- [🧩 Tech Stack](#-tech-stack)
+- [📊 Data](#-data)
+- [🧠 Feature Engineering](#-feature-engineering)
+- [📈 Project Architecture](#-project-architecture)
+- [📊 Results](#-results)
+- [🏭 Applications](#-applications)
 
-   -> Raw Edge Features 
-   - amount
-   - timestamp
-   - device_id
-   - location
-   - tx_type
-   - status
+---
 
-  -> MultiGraph Features
-   - Transaction count
-   - Total amount
-   - Average amount
-   - Latest transaction time
- 
-  -> Temporal features
-   - velocity
-   - Duration
+## ✨ Key Features
 
-  ->Behavioral Edge features 
-   - unique devices used
-   - Location variatio 
-   - Failed transaction ratio
+- 🕸️ Models transactions as a **graph** (accounts/entities as nodes, transfers as edges) rather than flat tabular rows
+- 🧠 **Graph Neural Network** classification (GraphSAGE / GCN) to learn fraud patterns from node and edge context
+- 🔁 Classical **graph heuristics** layered alongside the GNN: cycle detection, fan-in/fan-out detection, burst detection, dense subgraph detection, and device-sharing analysis
+- 🚨 **Unsupervised anomaly detection** (Isolation Forest, Local Outlier Factor) to catch novel fraud patterns without labeled examples
+- 🔗 Rich **multigraph and temporal edge modeling** to capture repeated and time-sensitive transaction behavior between the same accounts
 
-For the dataset - we are generating synthetic data specially designed for our project and using it as training data. For testing, we will take multiple datasets from kaggle including the Elliptic Bitcoin Dataset
+---
+
+## 🧩 Tech Stack
+
+| Component                  | Technology |
+|----------------------------|-----------|
+| Core Language               | Python |
+| Performance-Critical Modules | C++ |
+| Graph Learning               | Graph Neural Networks (GraphSAGE, GCN) |
+| Anomaly Detection            | Isolation Forest, Local Outlier Factor (LOF) |
+| Graph Analysis               | Cycle / dense subgraph / fan-in-fan-out heuristics |
+
+---
+
+## 📊 Data
+
+- **Training:** Synthetic transaction graph data, generated to simulate realistic fraud and non-fraud behavior patterns
+- **Testing / Benchmarking:** Public Kaggle fraud datasets, including the **Elliptic Bitcoin Dataset**, used to validate detection performance on real-world-style transaction graphs
+
+---
+
+## 🧠 Feature Engineering
+
+FraudNet-GNN builds a multi-layered feature set for each transaction graph:
+
+- **Node Features** — attributes describing individual accounts/entities
+- **Graph-Based Features** — structural signals derived from the surrounding graph topology (e.g. centrality, connectivity patterns)
+- **Dynamic Features** — behavior that evolves over time for a given node
+- **Edge Features** — including:
+  - Raw transaction attributes
+  - Multigraph features (handling multiple edges between the same node pair)
+  - Temporal features (timing and sequence of transactions)
+  - Behavioral features (patterns of interaction between connected accounts)
+
+---
+
+## 📈 Project Architecture
+
+![Model Workflow](images/model_workflow.png)
+
+The pipeline combines three complementary detection strategies rather than relying on a single model:
+
+1. **Graph Construction** — raw transaction data is converted into a graph structure (nodes = accounts/entities, edges = transactions)
+2. **Heuristic Screening** — graph-theoretic checks (cycles, fan-in/fan-out, bursts, dense subgraphs, shared devices) flag structurally suspicious patterns
+3. **GNN Classification** — a GraphSAGE/GCN model learns from node, edge, and neighborhood context to classify fraud vs. legitimate activity
+4. **Anomaly Detection Layer** — Isolation Forest and LOF catch outliers that don't match known fraud signatures, adding coverage for novel fraud types
+
+---
+
+## 📊 Results
+
+![Results](images/results.png)
+
+Final results after 5 training epochs. Model checkpoint saved to `model.pth` after training.
+
+---
+
+## 🏭 Applications
+
+- Anti-money-laundering (AML) monitoring for banks and fintech platforms
+- Detecting coordinated fraud rings across multiple accounts
+- Cryptocurrency transaction monitoring (e.g. Bitcoin transaction graphs)
+- Device-sharing and identity-cluster fraud detection
